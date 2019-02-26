@@ -1,0 +1,98 @@
+//
+//  MineController.swift
+//  GardenCoceral
+//
+//  Created by TongNa on 2018/4/9.
+//  Copyright © 2018年 tongna. All rights reserved.
+//
+
+import UIKit
+
+class MineController: BaseViewController {
+
+    var tableView = UITableView()
+    var itemArr = [
+        ["mine-intro","我的信息"],
+        ["mine-wallet","我的钱包"],
+        ["mine-activity","我的活动"],
+        ["mine-pwd","修改密码"],
+        ["mine-redpacket","红包记录"]
+    ]
+    var isLogin = false
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        create()
+    }
+
+}
+extension MineController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return isLogin ? 2 : 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return section == 0 ? 1 : itemArr.count
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 5
+        }
+        return 0
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            if isLogin {
+                let cell = tableView.dequeueReusableCell(for: indexPath) as MineCompanyCell
+                return cell
+            }else {
+                let cell = tableView.dequeueReusableCell(for: indexPath) as MineNoLoginCell
+                return cell
+            }
+        }else {
+            let cell = tableView.dequeueReusableCell(for: indexPath) as MineActionCell
+            cell.logo.image = UIImage(named: itemArr[indexPath.row][0])
+            cell.name.text = itemArr[indexPath.row][1]
+            return cell
+        }
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch indexPath.row {
+        case 1:
+            let vc = MineWalletController()
+            navigationController?.pushViewController(vc, animated: true)
+        case 3:
+            let vc = ModifyPasswordController()
+            navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
+}
+extension MineController {
+    func create() {
+        
+        tableView = UITableView(frame: .zero, style: .plain).then {
+            $0.tableFooterView = UIView()
+            $0.backgroundColor = backColor
+            view.addSubview($0)
+            $0.snp.makeConstraints({ (m) in
+                m.left.right.bottom.equalTo(0)
+                m.top.equalTo(navigationBarHeight)
+            })
+            
+            $0.register(cellType: MineInfoCell.self)
+            $0.register(cellType: MineActionCell.self)
+            $0.register(cellType: MineCompanyCell.self)
+            $0.register(cellType: MineNoLoginCell.self)
+            $0.delegate = self
+            $0.dataSource = self
+            //ios11可以不用设置estimatedRowHeight？
+            $0.estimatedRowHeight = 200
+        }
+    }
+}

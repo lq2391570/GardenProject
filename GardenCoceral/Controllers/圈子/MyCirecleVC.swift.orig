@@ -1,0 +1,259 @@
+//
+//  MyCirecleVC.swift
+//  GardenCoceral
+//
+//  Created by shiliuhua on 2018/4/13.
+//  Copyright © 2018年 tongna. All rights reserved.
+//
+
+import UIKit
+import MJRefresh
+class MyCirecleVC: UIViewController,UITableViewDelegate,UITableViewDataSource
+{
+    //圈子类型
+    enum CirecleType {
+        
+        case MyCircleType   //我的圈子
+        case userCircleType  //其他人的圈子
+    }
+    
+    @IBOutlet var tableView: UITableView!
+    var tempArray:NSMutableArray!
+    var dynamiBassClass:ActivityActivityBassClass!
+    var cirType:CirecleType!
+    //顶部刷新
+    var header = MJRefreshHeader()
+    //底部刷新
+    var footer = MJRefreshFooter()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+<<<<<<< HEAD
+        if cirType == .MyCircleType {
+            //我的圈子
+            self.title = "我的圈子"
+        }else{
+            //其他人的圈子
+            self.title = "圈子"
+        }
+        self.navigationController?.isNavigationBarHidden = false
+        // Do any additional setup after loading the view.
+=======
+        navigationController?.isNavigationBarHidden = false
+>>>>>>> 52c325773ec873c6f7bc2788e042c4efd62f34a1
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.estimatedRowHeight = 100
+        tableView.register(UINib.init(nibName: "CircleFirstCell", bundle: nil), forCellReuseIdentifier: "CircleFirstCell")
+        tableView.register(UINib.init(nibName: "CircleSecondCell", bundle: nil), forCellReuseIdentifier: "CircleSecondCell")
+        tableView.register(UINib.init(nibName: "DynamicCell", bundle: nil), forCellReuseIdentifier: "DynamicCell")
+        self.tempArray = NSMutableArray(capacity: 0)
+        self.tableView.mj_header = MJRefreshHeader.init(refreshingBlock: {
+            print("刷新")
+            self.tableView.reloadData()
+            self.tableView.mj_header.endRefreshing()
+        })
+        self.tableView.mj_header.beginRefreshing()
+        self.getUserDynamic()
+    }
+    
+    
+    //获取某个用户的动态
+    func getUserDynamic() -> Void {
+        startRequest(requestURLStr: dynamicForUserUrl, dic: ["commerce":1,"userToken":userToken,"user":userId,"no":1,"size":10], actionHandler: { (jsonStr) in
+            self.dynamiBassClass = ActivityActivityBassClass(json: jsonStr)
+            self.tempArray = NSMutableArray(array: self.dynamiBassClass.list!)
+            self.tableView.reloadData()
+        }) {
+            
+        }
+        
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
+        if self.cirType == .MyCircleType {
+            if indexPath.section == 0 {
+                return 110
+            }else if indexPath.section == 1 {
+                return 90
+            }
+            return UITableViewAutomaticDimension
+        }else{
+            if indexPath.section == 0 {
+                return 110
+            }
+            return UITableViewAutomaticDimension
+        }
+        
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if self.cirType == .MyCircleType {
+            if section == 0 {
+                return 15
+            }else if section == 1 {
+                return 15
+            }else{
+                return 0
+            }
+        }else{
+            if section == 0 {
+                return 15
+            }else{
+                return 0
+            }
+            
+        }
+    }
+   
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        if cirType == .MyCircleType {
+            if section == 0 || section == 1 {
+                return 1
+            }else{
+                return tempArray.count
+            }
+        }else{
+            if section == 0 {
+                return 1
+            }else{
+                return tempArray.count
+            }
+            
+        }
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        if cirType == .MyCircleType {
+            if indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CircleFirstCell") as! CircleFirstCell
+                if tempArray.count != 0 {
+                    let listModel:ActivityList = tempArray.object(at: 0) as! ActivityList
+                    let articleModel:ActivityMember = listModel.member!
+                    cell.getModel(memberModel: articleModel)
+                }
+                return cell
+            }else if indexPath.section == 1{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CircleSecondCell") as! CircleSecondCell
+                return cell
+            }else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicCell") as! DynamicCell
+                let listModel:ActivityList = tempArray[indexPath.section] as! ActivityList
+               
+                cell.getModelAndDispose(listModel)
+                cell.dateLabel.isHidden = false
+                cell.topViewHeight.constant = 20
+                cell.topView.isHidden = true
+                cell.dateLabel.text = listModel.date
+                cell.shareBtn.isHidden = false
+                cell.shareImageView.isHidden = false
+                
+                
+                cell.imageNameArray = ["koala-walk-1@2x"]
+                cell.messageBtnClickClosure = {(btn) in
+                    print("点击msgBtn")
+                }
+                cell.zanBtnClickClosure = { (btn) in
+                    print("点击赞")
+                    //self.zanAvtivity(listModel.id ?? 0)
+                    self.zanAvtivity(listModel.id ?? 0, {
+                        //点赞成功的操作
+                        if cell.zanImageView.image?.accessibilityIdentifier == "点赞（已点）"{
+                            cell.zanImageView.image? = UIImage.init(named: "点赞（未点）")!
+                            cell.numOfZan = cell.numOfZan - 1
+                            cell.zanNumLabel.text = "\(cell.numOfZan)"
+                        }else{
+                            cell.zanImageView.image? = UIImage.init(named: "点赞（已点）")!
+                            cell.numOfZan = cell.numOfZan + 1
+                            cell.zanNumLabel.text = "\(cell.numOfZan)"
+                        }
+                    })
+                }
+                return cell
+                
+            }
+        }else{
+            if indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CircleFirstCell") as! CircleFirstCell
+                if tempArray.count != 0 {
+                    let listModel:ActivityList = tempArray.object(at: 0) as! ActivityList
+                    let articleModel:ActivityMember = listModel.member!
+                    cell.getModel(memberModel: articleModel)
+                }
+                return cell
+            }
+            else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "DynamicCell") as! DynamicCell
+                let listModel:ActivityList = tempArray[indexPath.section] as! ActivityList
+                cell.getModelAndDispose(listModel)
+                cell.dateLabel.isHidden = false
+                cell.topViewHeight.constant = 20
+                cell.topView.isHidden = true
+                cell.dateLabel.text = listModel.date
+                cell.shareBtn.isHidden = false
+                cell.shareImageView.isHidden = false
+                cell.imageNameArray = ["koala-walk-1@2x"]
+                cell.messageBtnClickClosure = {(btn) in
+                    print("点击msgBtn")
+                }
+                cell.zanBtnClickClosure = { (btn) in
+                    print("点击赞")
+                    //self.zanAvtivity(listModel.id ?? 0)
+                    self.zanAvtivity(listModel.id ?? 0, {
+                        //点赞成功的操作
+                        if cell.zanImageView.image?.accessibilityIdentifier == "点赞（已点）"{
+                            cell.zanImageView.image? = UIImage.init(named: "点赞（未点）")!
+                            cell.numOfZan = cell.numOfZan - 1
+                            cell.zanNumLabel.text = "\(cell.numOfZan)"
+                        }else{
+                            cell.zanImageView.image? = UIImage.init(named: "点赞（已点）")!
+                            cell.numOfZan = cell.numOfZan + 1
+                            cell.zanNumLabel.text = "\(cell.numOfZan)"
+                        }
+                    })
+                }
+                return cell
+                
+            }
+            
+            
+        }
+    }
+    func zanAvtivity(_ activityId:NSInteger,_ resultClosure:@escaping () ->Void) -> Void {
+        startRequest(requestURLStr: zanUrl, dic: ["commerce":1,"userToken":userToken,"id":activityId], actionHandler: { (jsonStr) in
+            if jsonStr["code"] == 0 {
+                print("点赞成功")
+                resultClosure()
+            }else{
+                print("点赞失败")
+            }
+        }) {
+            
+        }
+    }
+  func numberOfSections(in tableView: UITableView) -> Int
+  {
+    if self.cirType == .MyCircleType {
+        //我的圈子
+        return 3
+    }else{
+        return 2
+    }
+}
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

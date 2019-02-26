@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="WebBottomView" customModule="GardenCoceral" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oc1-qR-yhT">
+                    <rect key="frame" x="148" y="18" width="78" height="65"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="65" id="cAq-q7-NdP"/>
+                        <constraint firstAttribute="width" constant="78" id="fqK-1C-iss"/>
+                    </constraints>
+                    <connections>
+                        <action selector="zanBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="ySq-aC-Z1s"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1首页-头条---详情_03" translatesAutoresizingMaskIntoConstraints="NO" id="exO-fA-5OJ">
+                    <rect key="frame" x="162" y="25" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="nFd-pe-T4o"/>
+                        <constraint firstAttribute="height" constant="50" id="ziy-A3-qJE"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbp-g4-jWh">
+                    <rect key="frame" x="8" y="0.0" width="361" height="1"/>
+                    <color key="backgroundColor" red="0.85490196080000003" green="0.85490196080000003" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="WXp-OG-ZbI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vbp-g4-jWh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="0DC-df-3NS"/>
+                <constraint firstItem="exO-fA-5OJ" firstAttribute="centerX" secondItem="oc1-qR-yhT" secondAttribute="centerX" id="BQF-eB-1st"/>
+                <constraint firstItem="vbp-g4-jWh" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="ZxN-3W-KKp"/>
+                <constraint firstItem="oc1-qR-yhT" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="cw5-7e-ezO"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="vbp-g4-jWh" secondAttribute="trailing" constant="6" id="doF-62-tAR"/>
+                <constraint firstItem="oc1-qR-yhT" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="fqx-vS-wwn"/>
+                <constraint firstItem="exO-fA-5OJ" firstAttribute="centerY" secondItem="oc1-qR-yhT" secondAttribute="centerY" id="xkg-TZ-vg7"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="25.5" y="-231"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="1首页-头条---详情_03" width="92" height="92"/>
+    </resources>
+</document>
